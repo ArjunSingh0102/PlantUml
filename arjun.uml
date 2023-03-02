@@ -1,0 +1,26 @@
+@startuml
+ 
+skinparam BackgroundColor #lightyellow
+hide footbox
+participant LoginControllerImpl.java #yellow
+participant LoginService.java #blue
+participant UserService.java #lightgreen
+participant AuthTransactionRipo.java #lightblue
+participant RequestFlooding.java #lightgreen
+participant AuthenticationService.java #skyblue
+
+-->LoginControllerImpl.java :/Init
+LoginControllerImpl.java --> LoginService.java:init phr Login()
+LoginControllerImpl.java <-- LoginService.java:Transaction response
+
+LoginService.java --> UserService.java:does phr Address Exit
+LoginService.java->UserService.java:start phr Auth Transaction
+
+UserService.java-> AuthenticationService.java:OTP Flood Check Using Redis
+AuthenticationService.java -> RequestFlooding.java :Server only
+
+AuthTransactionRipo.java <-AuthenticationService.java: Save Auth Transaction(OTP or Password)
+
+LoginService.java<- AuthenticationService.java:Transaction Response 
+
+@enduml
